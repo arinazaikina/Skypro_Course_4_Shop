@@ -23,7 +23,7 @@ class Item:
         self.all.append(self)
 
     def __repr__(self) -> str:
-        return repr(f'Item(name={self.__name}, price={self.__price}, quantity={self.__quantity})')
+        return f'Item(name={self.__name}, price={self.__price}, quantity={self.__quantity})'
 
     def __str__(self) -> str:
         return self.__name
