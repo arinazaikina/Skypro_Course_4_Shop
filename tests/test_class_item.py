@@ -34,7 +34,7 @@ def test_object_name_str(exist_item):
     assert str(exist_item) == 'товар 1_'
 
 def test_object_name_repr(exist_item):
-    assert repr(exist_item) == "'Item(name=товар 1_, price=8.0, quantity=10)'"
+    assert repr(exist_item) == 'Item(name=товар 1_, price=8.0, quantity=10)'
 
 def test_exception_long_name(exist_item):
     with pytest.raises(Exception):
