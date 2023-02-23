@@ -5,6 +5,7 @@ import pytest
 from shop.shop import Item
 
 def test_get_attributes(item):
+    """Проверка получения атрибутов экземпляра"""
     assert item.name == 'товар 1'
     assert item.price == 10000
     assert item.quantity == 20
@@ -12,6 +13,7 @@ def test_get_attributes(item):
     assert len(Item.all) == 1
 
 def test_change_attributes(exist_item):
+    """Проверка изменения атрибутов"""
     exist_item.name = 'товар 1_'
     exist_item.price = 10
     exist_item.quantity = 10
@@ -23,24 +25,33 @@ def test_change_attributes(exist_item):
     assert exist_item.pay_rate == 0.5
 
 def test_calculate_total_price(exist_item):
+    """Проверка расчета общей стоимости товаров"""
     assert exist_item.calculate_total_price() == 100
 
 def test_apply_discount(exist_item):
+    """Проверка применения скидки на товар"""
     exist_item.pay_rate = 0.8
     assert exist_item.apply_discount() == 8
     assert exist_item.price == 8
 
 def test_object_name_str(exist_item):
+    """Проверка отображения информации об объекте класса Item для пользователей"""
     assert str(exist_item) == 'товар 1_'
 
 def test_object_name_repr(exist_item):
+    """Проверка отображения информации об объекте класса Item для разработчиков"""
     assert repr(exist_item) == 'Item(name=товар 1_, price=8.0, quantity=10)'
 
 def test_exception_long_name(exist_item):
+    """Проверка вызова исключения, если название товара будет превышать 10 символов"""
     with pytest.raises(Exception):
         exist_item.name = 'длина названия товара больше 10 символов'
 
 def test_instantiate_from_csv():
+    """
+    Проверка атрибутов экземпляров, созданных из файла csv.
+    Проверка, что создано правильное количество экземпляров.
+    """
     Item.instantiate_from_csv(path=os.path.join('tests', 'test.csv'))
     item_2 = Item.all[1]
     item_3 = Item.all[2]
