@@ -148,3 +148,43 @@ class Phone(Item):
             self.__number_of_sim = number_of_sim
         else:
             raise ValueError('Количество физических SIM-карт должно быть равно 1 или 2.')
+
+
+class MixinKeyboardLayout:
+    """
+    Класс-миксин для хранения и изменения раскладки клавиатуры.
+    Attrs:
+        language (str): язык. Поддерживается два языка: 'EN' и 'RU'.
+        Язык по умолчанию (при инициализации) - английский 'EN'.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.__language = 'EN'
+        super().__init__(*args, **kwargs)
+
+    @property
+    def language(self):
+        """Геттер. Возвращает язык клавиатуры."""
+        return self.__language
+
+    def change_lang(self):
+        """Изменяет язык клавиатуры"""
+        if self.__language == 'RU':
+            self.__language = 'EN'
+        else:
+            self.__language = 'RU'
+
+
+class KeyBoard(MixinKeyboardLayout, Item):
+    """
+    Класс, описывающий Клавиатуру
+    Родительский класс - класс Item.
+    Миксин-класс - класс MixinKeyboardLanguage (хранит и изменяет раскладку)
+    Attrs:
+        name (str): передаётся название клавиатуры
+        price (float): передаётся цена клавиатуры
+        quantity (int): передаётся количество клавиатур
+    """
+
+    def __repr__(self) -> str:
+        return super().__repr__().replace('Item', 'Keyboard')
