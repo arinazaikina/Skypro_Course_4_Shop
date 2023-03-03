@@ -187,4 +187,4 @@ class KeyBoard(MixinKeyboardLayout, Item):
     """
 
     def __repr__(self) -> str:
-        return super().__repr__().replace('Item', 'Keyboard')
+        return super().__repr__().replace('Item', 'KeyBoard')
