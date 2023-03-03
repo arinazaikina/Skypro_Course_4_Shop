@@ -20,8 +20,11 @@ class Item:
 
     def __init__(self, name, price, quantity):
         self.__name = name
-        self.__price = price
-        self.__quantity = quantity
+        if price < 0 or quantity < 0:
+            raise AttributeError('Цена и количество товара не могут быть меньше 0')
+        else:
+            self.__price = price
+            self.__quantity = quantity
         self.all.append(self)
 
     def __repr__(self) -> str:
@@ -29,6 +32,12 @@ class Item:
 
     def __str__(self) -> str:
         return self.__name
+
+    def __add__(self, other):
+        """Сложение по количеству товара"""
+        if not isinstance(other, Item):
+            raise TypeError('Правый операнд должен быть объектом класса Item или объектом наследника класса Item')
+        return self.__quantity + other.__quantity
 
     @property
     def name(self) -> str:
@@ -101,3 +110,41 @@ class Item:
             csv_file = csv.DictReader(file)
             for row in csv_file:
                 cls(name=row['name'], price=cls.get_price(row['price']), quantity=int(row['quantity']))
+
+
+class Phone(Item):
+    """
+    Класс, описывающий Смартфон
+    Родительский класс - класс Item
+    Attrs:
+        name (str): передаётся название смартфона
+        price (float): передаётся цена смартфона
+        quantity (int): передаётся количество смартфонов
+        sima_cards_amount (int): передаётся количество сим-карт в смартфоне
+    """
+
+    def __init__(self, name, price, quantity, number_of_sim):
+        super().__init__(name, price, quantity)
+        if number_of_sim not in [1, 2]:
+            raise AttributeError('Количество физических SIM-карт должно быть равно 1 или 2.')
+        else:
+            self.__number_of_sim = number_of_sim
+
+    def __repr__(self) -> str:
+        return super().__repr__().replace('Item', 'Phone').replace(')', f', number_of_sim={self.__number_of_sim})')
+
+    @property
+    def number_of_sim(self) -> int:
+        """Геттер. Возвращает количество сим-карт в смартфоне"""
+        return self.__number_of_sim
+
+    @number_of_sim.setter
+    def number_of_sim(self, number_of_sim: int) -> None:
+        """
+        Сеттер. Устанавливает количество сим-карт в смартфоне.
+        Если количество сим-карт не 1 или не 2, выбрасывается исключение
+        """
+        if number_of_sim in [1, 2]:
+            self.__number_of_sim = number_of_sim
+        else:
+            raise ValueError('Количество физических SIM-карт должно быть равно 1 или 2.')
