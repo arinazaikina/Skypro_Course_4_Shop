@@ -1,3 +1,5 @@
+import contextlib
+import io
 import os
 
 import pytest
@@ -75,6 +77,30 @@ def test_instantiate_from_csv():
     assert item_3.name == 'товар 3'
     assert item_3.price == 2000
     assert item_3.quantity == 6
+
+
+def test_exception_file_not_found():
+    """Проверка вызова исключения, если файл не найден"""
+    s = io.StringIO()
+    with contextlib.redirect_stdout(s):
+        Item.instantiate_from_csv(path=os.path.join('tests', 'file.csv'))
+    assert s.getvalue() == 'FileNotFoundError: Отсутствует файл tests\\file.csv\n'
+
+
+def test_exception_file_damaged_1():
+    """Проверка вызова исключения, если файл повреждён"""
+    s = io.StringIO()
+    with contextlib.redirect_stdout(s):
+        Item.instantiate_from_csv(path=os.path.join('tests', 'bad_file_1.csv'))
+    assert s.getvalue() == 'InstantiateCSVError: Файл item.csv поврежден\n'
+
+
+def test_exception_file_damaged_2():
+    """Проверка вызова исключения, если файл повреждён"""
+    s = io.StringIO()
+    with contextlib.redirect_stdout(s):
+        Item.instantiate_from_csv(path=os.path.join('tests', 'bad_file_2.csv'))
+    assert s.getvalue() == 'InstantiateCSVError: Файл item.csv поврежден\n'
 
 
 def test_attributes_price_and_quantity():

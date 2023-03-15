@@ -1,6 +1,8 @@
 import csv
 import os.path
 
+from shop.errors import InstantiateCSVError
+
 
 class Item:
     """
@@ -105,11 +107,17 @@ class Item:
         Метод считывает данные из csv-файла и создает экземпляры класса, инициализируя их данными из файла.
         :param path: путь к файлу с данными.
         """
-
-        with open(path, 'r') as file:
-            csv_file = csv.DictReader(file)
-            for row in csv_file:
-                cls(name=row['name'], price=cls.get_price(row['price']), quantity=int(row['quantity']))
+        try:
+            with open(path, 'r') as file:
+                csv_file = csv.DictReader(file)
+                for row in csv_file:
+                    if len(row.keys()) > 3 or list(row.keys()) != ['name', 'price', 'quantity']:
+                        raise InstantiateCSVError(message='InstantiateCSVError: Файл item.csv поврежден')
+                    cls(name=row['name'], price=cls.get_price(row['price']), quantity=int(row['quantity']))
+        except FileNotFoundError:
+            print(f'FileNotFoundError: Отсутствует файл {path}')
+        except InstantiateCSVError as error:
+            print(error.message)
 
 
 class Phone(Item):
